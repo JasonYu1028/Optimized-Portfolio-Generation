@@ -114,7 +114,7 @@ class Portfolio:
   def calc_covariance_matrix(self):
     """Calculates the covariance matrix using OAS shrinkage"""
     # Use weekly data for better covariance results
-    weekly_returns = self.data['Return'].resample('1W').mean().applymap(lambda x: (x + 1)**7 - 1).fillna(0)
+    weekly_returns = self.data['Return'].resample('1W').prod().fillna(0)
     self.cov_matrix = covariance.oas(weekly_returns)[0]
     
 class MVO:
