@@ -32,7 +32,7 @@ class Analyst:
     self.merged = pd.merge(self.ratings, self.bool_growth, on=['OFTIC', 'DATE'], how='inner')
   
   def rank(self, end_date: Union[str, None] = None) -> pd.DataFrame:
-    """Get confidence levels without time bias - confidence prior to end_date"""
+    """Get confidence levels without look ahead bias - confidence prior to end_date"""
     data = self.merged
     if end_date is not None:
       data = self.merged[self.merged['DATE'] <= end_date]
@@ -44,4 +44,4 @@ class Analyst:
       if len(group) <= 1:
         conf = 0.5
       analysts['CONFIDENCE'].append(conf)
-    self.confidence = pd.DataFrame(analysts)
+    return pd.DataFrame(analysts)
