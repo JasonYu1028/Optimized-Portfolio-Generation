@@ -1,11 +1,24 @@
 from datetime import datetime
 
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from dateutil.relativedelta import relativedelta
 
 import MVO
 
+
+def datediff(date1: str, date2: str, interval: str):
+  dlta = np.timedelta64(1, 'D')
+  if (interval == "d"):
+    dlta = np.timedelta64(1, 'D')
+  elif (interval == "m"):
+    dlta = np.timedelta64(1, 'M')
+  elif (interval == "y"):
+    dlta = np.timedelta64(1, 'Y')
+  else:
+    raise NotImplementedError(f"Unknown interval {interval}")
+  return (pd.to_datetime(date1) - pd.to_datetime(date2)) / dlta
 
 def dateadd(date: str, interval: str, n: int):
   dlta = relativedelta(days=1)

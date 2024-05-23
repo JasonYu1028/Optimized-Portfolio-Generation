@@ -125,10 +125,11 @@ class MVO:
    - market: the market reference
    - bounds: constraint on the weight of each stock where 1 == 100% and negative means shorting
   """
-  def __init__(self, portfolio: Portfolio, bounds: Union[list, None] = None) -> None:
+  def __init__(self, portfolio: Portfolio, bounds: Union[list, None] = None, expected_returns = None) -> None:
     self.portfolio = portfolio
     self.bounds = bounds
     self.init_guess = np.ones(len(self.portfolio.tickers)) / len(self.portfolio.tickers)
+    self.expected_returns = portfolio.expected_returns if expected_returns is None else expected_returns
   
   def pf_variance(self, weights):
     return np.dot(weights.T, np.dot(self.portfolio.cov_matrix, weights))
@@ -137,7 +138,7 @@ class MVO:
     return np.sqrt(self.pf_variance(weights))
   
   def pf_return(self, weights):
-    return np.dot(weights.T, self.portfolio.expected_returns)
+    return np.dot(weights.T, self.expected_returns)
   
   def pf_return_negate(self, weights):
     return -self.pf_return(self, weights)
@@ -162,7 +163,7 @@ class MVO:
 
     self.stats = {
       "Weights": result.x,
-      "Returns": np.sum(self.portfolio.expected_returns * result.x),
+      "Returns": np.sum(self.expected_returns * result.x),
       "Volatility": np.sqrt(result.fun)
     }
     
@@ -195,7 +196,7 @@ class MVO:
 
     self.stats = {
       "Weights": result.x,
-      "Returns": np.sum(self.portfolio.expected_returns * result.x),
+      "Returns": np.sum(self.expected_returns * result.x),
       "Volatility": self.pf_volatility(result.x),
       "Sharpe": -result.fun
     }
@@ -212,7 +213,7 @@ class MVO:
 
     self.stats = {
       "Weights": result.x,
-      "Returns": np.sum(self.portfolio.expected_returns * result.x),
+      "Returns": np.sum(self.expected_returns * result.x),
       "Volatility": self.pf_volatility(result.x),
       "Utility": -result.fun
     }
