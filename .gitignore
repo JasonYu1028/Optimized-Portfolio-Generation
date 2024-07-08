@@ -1,9 +1,0 @@
-# WRDS data:
-*.sas7bdat
-*.parquet
-
-# Jupyter + Python
-__pycache__/
-
-# VSCode
-.vscode/
